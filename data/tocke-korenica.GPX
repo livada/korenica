@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="CompeGPS" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <link href="http://www.compegps.com">
+      <text>CompeGPS TEAM, SL</text>
+    </link>
+    <time>2009-10-05T07:15:09Z</time>
+    <bounds maxlat="44.797393" maxlon="15.966135" minlat="44.541010" minlon="15.605062"/>
+  </metadata>
+  <wpt lat="44.554350" lon="15.787883">
+    <ele>650.0</ele>
+    <name>ADU065</name>
+    <cmt>AERODROM UDBINA</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.784550" lon="15.756517">
+    <ele>1630.0</ele>
+    <name>ANT163</name>
+    <cmt>ANTENA GOLA PLJESIVICA</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.765183" lon="15.691617">
+    <ele>680.0</ele>
+    <name>BKR068</name>
+    <cmt>BORJE KRIZANJE</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.697067" lon="15.781567">
+    <ele>600.0</ele>
+    <name>BPC060</name>
+    <cmt>BIJELO POLJE CILJ</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.704667" lon="15.748500">
+    <ele>620.0</ele>
+    <name>BPK062</name>
+    <cmt>BIJELO POLJE KRIZANJE</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.671700" lon="15.611467">
+    <ele>650.0</ele>
+    <name>BSC065</name>
+    <cmt>BUNIC SRUSENA CRKVA</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.678200" lon="15.793317">
+    <ele>940.0</ele>
+    <name>BUK094</name>
+    <cmt>BUKVAR VRH</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.715467" lon="15.783417">
+    <ele>610.0</ele>
+    <name>CFK061</name>
+    <cmt>CRKVA FRKASIC</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.554233" lon="15.957067">
+    <ele>610.0</ele>
+    <name>DLP061</name>
+    <cmt>DOLNJI LAPAC</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.674683" lon="15.728450">
+    <ele>720.0</ele>
+    <name>GPV072</name>
+    <cmt>GORICA PRIJEVOJ</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.576433" lon="15.748533">
+    <ele>640.0</ele>
+    <name>JCK064</name>
+    <cmt>JOSANI CRKVA</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.710950" lon="15.622967">
+    <ele>680.0</ele>
+    <name>KBC068</name>
+    <cmt>KRBAVICA CRKVA</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.688133" lon="15.813133">
+    <ele>600.0</ele>
+    <name>KFV060</name>
+    <cmt>KRIZANJE FRKASIC VEDASIC</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.615200" lon="15.669167">
+    <ele>630.0</ele>
+    <name>KRB063</name>
+    <cmt>KRBAVA SELO</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.743550" lon="15.707083">
+    <ele>670.0</ele>
+    <name>KRK067</name>
+    <cmt>KORENICA KRIZANJE</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.789850" lon="15.698183">
+    <ele>900.0</ele>
+    <name>OMI090</name>
+    <cmt>OSTRI MIHALJEVAC</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.674083" lon="15.848500">
+    <ele>1060.0</ele>
+    <name>PBP106</name>
+    <cmt>PIRAMIDA BIJELI POTOCI</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.768183" lon="15.653433">
+    <ele>880.0</ele>
+    <name>PGD088</name>
+    <cmt>PRIJEVOJ POGLEDALO</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.687083" lon="15.831650">
+    <ele>1160.0</ele>
+    <name>SFR116</name>
+    <cmt>START FRKASIC</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.704578" lon="15.819669">
+    <ele>1200.0</ele>
+    <name>STB120</name>
+    <cmt>START BJELOPOLJE</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.795433" lon="15.747350">
+    <ele>1640.0</ele>
+    <name>STG164</name>
+    <cmt>START GOLA PLJESIVICA</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.543650" lon="15.765300">
+    <ele>700.0</ele>
+    <name>UDB070</name>
+    <cmt>UDBINA MOST</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+  <wpt lat="44.776267" lon="15.709600">
+    <ele>966.0</ele>
+    <name>TMI096</name>
+    <cmt>TUPI MIHALJEVAC</cmt>
+    <sym>Waypoint</sym>
+  </wpt>
+</gpx>
