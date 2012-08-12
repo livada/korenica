@@ -45,12 +45,12 @@ private:
 	vector<unsigned long> waypoint_indices, test_indices;
 	double waypoint_dist;
 
-	double *distance_cashe;
+	double *distance_cache;
 
 	double task_distance(vector<unsigned long>);
 	void waypoint_recursion(unsigned long index, unsigned long cylinder);
 
-	double cashed_distance(unsigned long i1, unsigned long i2);
+	double cached_distance(unsigned long i1, unsigned long i2);
 
 	double calc_inverse(double lat1, double lon1, double lat2, double lon2);
 

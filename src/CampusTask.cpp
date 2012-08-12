@@ -10,13 +10,13 @@
 
 
 CampusTask::CampusTask() {
-	this->distance_cashe = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2)];
+	this->distance_cache = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2)];
 	for (unsigned long i=0; i<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2); i++)
-		this->distance_cashe[i] = 0.0;
+		this->distance_cache[i] = 0.0;
 }
 
 CampusTask::~CampusTask() {
-	delete[] this->distance_cashe;
+	delete[] this->distance_cache;
 }
 
 void CampusTask::flush_task() {
@@ -48,7 +48,7 @@ void CampusTask::flush_track() {
 	this->track_lon.clear();
 
 	for (unsigned long i=0; i<MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2; i++)
-		this->distance_cashe[i] = 0.0;
+		this->distance_cache[i] = 0.0;
 
 	this->points_in_cylinder.clear();
 	this->dist_from_goal.clear();
@@ -190,18 +190,18 @@ double CampusTask::calc_inverse(double lat1, double lon1, double lat2, double lo
 	return s12/1000.0;
 }
 
-double CampusTask::cashed_distance(unsigned long i1, unsigned long i2){
+double CampusTask::cached_distance(unsigned long i1, unsigned long i2){
 	if (i1==i2) return 0.0;
 	if (i1>i2) swap(i1,i2);
 //	assert(XY(i1,i2)<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2));
-	if (this->distance_cashe[XY(i1,i2)] == 0.0) {
+	if (this->distance_cache[XY(i1,i2)] == 0.0) {
 		double d;
 		d = this->calc_inverse(
 				this->track_lat[i1], this->track_lon[i1],
 				this->track_lat[i2], this->track_lon[i2]);
-		this->distance_cashe[XY(i1,i2)] = d;
+		this->distance_cache[XY(i1,i2)] = d;
 	}
-	return this->distance_cashe[XY(i1,i2)];
+	return this->distance_cache[XY(i1,i2)];
 }
 
 double CampusTask::task_distance(vector<unsigned long> task){
@@ -210,7 +210,7 @@ double CampusTask::task_distance(vector<unsigned long> task){
 	if (task.size()<2) return 0.0;
 
 	for(unsigned long i=0; i<task.size()-1; i++)
-		task_dist += this->cashed_distance(task[i], task[i+1]);
+		task_dist += this->cached_distance(task[i], task[i+1]);
 
 	unsigned long last_index = task.back();
 
