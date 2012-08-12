@@ -6,15 +6,17 @@
  */
 
 #include "CampusTask.h"
+#include <assert.h>
+
 
 CampusTask::CampusTask() {
-	this->distance_cashe = (double *) malloc(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2 * sizeof(double));
-	for (unsigned long i=0; i<MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2; i++)
+	this->distance_cashe = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2)];
+	for (unsigned long i=0; i<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2); i++)
 		this->distance_cashe[i] = 0.0;
 }
 
 CampusTask::~CampusTask() {
-	free(this->distance_cashe);
+	delete[] this->distance_cashe;
 }
 
 void CampusTask::flush_task() {
@@ -191,6 +193,7 @@ double CampusTask::calc_inverse(double lat1, double lon1, double lat2, double lo
 double CampusTask::cashed_distance(unsigned long i1, unsigned long i2){
 	if (i1==i2) return 0.0;
 	if (i1>i2) swap(i1,i2);
+//	assert(XY(i1,i2)<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2));
 	if (this->distance_cashe[XY(i1,i2)] == 0.0) {
 		double d;
 		d = this->calc_inverse(
