@@ -1,6 +1,7 @@
 from ctypes import cdll, c_long, c_double, c_bool, c_char_p
 
 import os
+import math
 
 if os.name=='posix':
     lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),'libCampus.so'))
@@ -67,6 +68,8 @@ class CampusTrack(object):
         self.legs = None
         self.poly_legs = None
         
+        self.poly_coef = None
+        
         self.total_distance = None
         self.goal_penalty = 0.0
         self.time_penalty = 0.0
@@ -77,6 +80,21 @@ class CampusTrack(object):
         self.in_goal = False
 
         self.score = 0.0
+        
+    def calc_poly_coef(self):
+        # Only for triangle for now.
+        if len(self.poly_legs)!=3:
+            return
+        
+        a, b, c = self.poly_legs
+        s = (a + b + c) / 2.0
+        T = math.sqrt(s * (s-a) * (s-b) * (s-c))
+        
+        a_ideal = (a + b + c) / 3.0
+        T_ideal =  a_ideal**2 * math.sqrt(3)/4
+        
+        self.poly_coef = T / T_ideal
+        
 
     def export_kml(self, filename):
         header = '''<?xml version="1.0" encoding="UTF-8"?>
@@ -165,6 +183,8 @@ class CampusTask(CampusTaskWrapper):
         track.waypoints = [track.track[int(i)] for i in self.get_waypoints().split('|')]
         track.legs = [float(d) for d in self.get_leg_distances().split('|')]
         track.poly_legs = [float(d) for d in self.get_poly_leg_distances().split('|')]
+        
+        track.calc_poly_coef()
  
         self.flush_track()
        
