@@ -86,7 +86,7 @@ void CampusTask::waypoint_recursion(unsigned long index, unsigned long cylinder)
 		if (this->points_in_cylinder[cylinder][i]<index)
 			continue;
 		// Try with this point in this cylinder.
-		this->test_indices[cylinder] = this->points_in_cylinder[cylinder][i];
+		this->test_indices.back() = this->points_in_cylinder[cylinder][i];
 		// Recurse in the rest of the cylinders.
 		if (cylinder+1<this->cylinder_lat.size())
 			this->waypoint_recursion(this->test_indices[cylinder]+1, cylinder+1);
@@ -175,7 +175,7 @@ const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 	Math::real azi, lat2, lon2, azi2, m12;
 
 	for (azi=0.0; azi<=360.0; azi += 3.0) {
-		Geodesic::WGS84.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12, false);
+		Geodesic::WGS84.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12);
 		ss << lat2 << "," << lon2;
 		ss << "|";
 	}
@@ -193,7 +193,9 @@ double CampusTask::calc_inverse(double lat1, double lon1, double lat2, double lo
 double CampusTask::cached_distance(unsigned long i1, unsigned long i2){
 	if (i1==i2) return 0.0;
 	if (i1>i2) swap(i1,i2);
-//	assert(XY(i1,i2)<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2));
+
+	assert(XY(i1,i2)<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2));
+
 	if (this->distance_cache[XY(i1,i2)] == 0.0) {
 		double d;
 		d = this->calc_inverse(
