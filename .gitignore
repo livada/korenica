@@ -1,5 +1,7 @@
-.cproject
 .project
+.cproject
+.pydevproject
+.settings
 *.pyc
 *.so
 
