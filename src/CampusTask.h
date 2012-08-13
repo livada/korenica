@@ -68,6 +68,8 @@ public:
 
     long number_of_wpts();
     const char* get_waypoints();
+    const char* get_leg_distances();
+    const char* get_poly_leg_distances();
 
     const char* make_cylinder(double lat, double lon, double radius);
 
@@ -90,6 +92,8 @@ extern "C" {
     void CampusTask_do_calculation(CampusTask* task){ task->do_calculation(); }
     long CampusTask_number_of_wpts(CampusTask* task){ return task->number_of_wpts(); }
     const char* CampusTask_get_waypoints(CampusTask* task){ return task->get_waypoints(); }
+    const char* CampusTask_get_leg_distances(CampusTask* task){ return task->get_leg_distances(); }
+    const char* CampusTask_get_poly_leg_distances(CampusTask* task){ return task->get_poly_leg_distances(); }
     const char* CampusTask_make_cylinder(CampusTask* task, double lat, double lon, double radius)
     		{ return task->make_cylinder(lat, lon, radius); }
     double CampusTask_get_total_distance(CampusTask* task){ return task->get_total_distance(); }

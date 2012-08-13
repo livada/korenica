@@ -9,6 +9,8 @@ else:
 
 lib.CampusTask_number_of_wpts.restype = c_long
 lib.CampusTask_get_waypoints.restype = c_char_p
+lib.CampusTask_get_leg_distances.restype = c_char_p
+lib.CampusTask_get_poly_leg_distances.restype = c_char_p
 lib.CampusTask_make_cylinder.restype = c_char_p
 lib.CampusTask_get_total_distance.restype = c_double
 lib.CampusTask_get_goal_penalty.restype = c_double
@@ -39,6 +41,12 @@ class CampusTaskWrapper(object):
 
     def get_waypoints(self):
         return lib.CampusTask_get_waypoints(self.obj)
+    
+    def get_leg_distances(self):
+        return lib.CampusTask_get_leg_distances(self.obj)
+    
+    def get_poly_leg_distances(self):
+        return lib.CampusTask_get_poly_leg_distances(self.obj)
 
     def make_cylinder(self, lat, lon, radius):
         return lib.CampusTask_make_cylinder(self.obj, c_double(lat), c_double(lon), c_double(radius))
@@ -56,6 +64,8 @@ class CampusTrack(object):
     def __init__(self, track):
         self.track = track
         self.waypoints = None
+        self.legs = None
+        self.poly_legs = None
         
         self.total_distance = None
         self.goal_penalty = 0.0
@@ -153,6 +163,8 @@ class CampusTask(CampusTaskWrapper):
         track.score = (track.total_distance - track.goal_penalty - track.time_penalty) * 10
         
         track.waypoints = [track.track[int(i)] for i in self.get_waypoints().split('|')]
+        track.legs = [float(d) for d in self.get_leg_distances().split('|')]
+        track.poly_legs = [float(d) for d in self.get_poly_leg_distances().split('|')]
  
         self.flush_track()
        

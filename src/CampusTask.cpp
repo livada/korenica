@@ -170,6 +170,36 @@ const char* CampusTask::get_waypoints() {
 	return s.c_str();
 }
 
+const char* CampusTask::get_leg_distances() {
+	stringstream ss;
+
+	if (this->waypoint_indices.size()<2) return "0";
+
+	for (unsigned long i=0; i<this->waypoint_indices.size()-1; i++) {
+		ss << this->cached_distance(this->waypoint_indices[i], this->waypoint_indices[i+1]);
+		ss << "|";
+	}
+	ss << this->dist_from_goal[this->waypoint_indices.back()];
+
+	string s(ss.str());
+	return s.c_str();
+}
+
+const char* CampusTask::get_poly_leg_distances() {
+	stringstream ss;
+
+	if (this->waypoint_indices.size()<4) return "0";
+
+	for (unsigned long i=1; i<this->waypoint_indices.size()-1; i++) {
+		ss << this->cached_distance(this->waypoint_indices[i], this->waypoint_indices[i+1]);
+		ss << "|";
+	}
+	ss << this->cached_distance(this->waypoint_indices.back(), this->waypoint_indices[1]);
+
+	string s(ss.str());
+	return s.c_str();
+}
+
 const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 	stringstream ss;
 	Math::real azi, lat2, lon2, azi2, m12;
