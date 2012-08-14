@@ -15,6 +15,7 @@ lib.CampusTask_get_poly_leg_distances.restype = c_char_p
 lib.CampusTask_make_cylinder.restype = c_char_p
 lib.CampusTask_get_total_distance.restype = c_double
 lib.CampusTask_get_goal_penalty.restype = c_double
+lib.CampusTask_get_last_index.restype = c_long
 lib.CampusTask_in_goal.restype = c_bool
 
 # CampusTask wrapper
@@ -57,6 +58,9 @@ class CampusTaskWrapper(object):
 
     def get_goal_penalty(self):
         return lib.CampusTask_get_goal_penalty(self.obj)
+    
+    def get_last_index(self):
+        return lib.CampusTask_get_last_index(self.obj)
 
     def in_goal(self):
         return lib.CampusTask_in_goal(self.obj)
@@ -80,6 +84,19 @@ class CampusTrack(object):
         self.in_goal = False
 
         self.score = 0.0
+        
+    def __str__(self):
+        return ', '.join(map(str,(self.total_distance, 
+                self.avg_speed,
+                self.penalty_seconds,      
+                self.time_penalty,               
+                int(self.in_goal),
+                self.goal_penalty, 
+                self.score,
+                self.poly_coef,
+                self.score * self.poly_coef,
+                self.score * (1.0 + self.poly_coef)
+                ))) + ';'
         
     def calc_poly_coef(self):
         # Only for triangle for now.
@@ -149,26 +166,47 @@ class CampusTask(CampusTaskWrapper):
         
         if isinstance(track, list):
             track = CampusTrack(track)
-            print 'Warning: No time data!'
+            raise 'Error: No time data!'
+            
         elif isinstance(track, IGCReader):
             
-            # TODO: Crop still points.
+            # Crop still points.
+            def near(a, b):
+                epsilon = 0.00005
+                return a+epsilon>b and a-epsilon<b
             
+            def avg(l):
+                return sum(l)/len(l)
             
-            # TODO: Calculate time penalty. 
-            start_time = track.track[0].time
-            end_time = track.track[len(track.track)-1].time
-            time_diff = (end_time - start_time).total_seconds() - self.max_time
-            time_penalty = time_diff if time_diff>0 else 0.0 # seconds
+            still_lats = []
+            still_lons = []
+            p = track.track.pop(0)
+            still_lats.append(p.lat)
+            still_lons.append(p.lon)
+            while near(track.track[0].lat, avg(still_lats)) and near(track.track[0].lon, avg(still_lons)):
+                p = track.track.pop(0)
+                still_lats.append(p.lat)
+                still_lons.append(p.lon)
+                
+            # Memorize igc data
+            igc_track = track
             
             track = CampusTrack([p.xy() for p in track.track]) # if (p.time-start_time).total_seconds()<self.max_time])
+            
         else:
-            print 'Warning: No time data!'
+            raise 'Error: No time data!'
             
         for p in track.track:
             self.push_track_point(*p)
         
         self.do_calculation()
+
+        # Calculate time penalty. 
+        last_index = self.get_last_index()
+        start_time = igc_track.track[0].time
+        end_time = igc_track.track[last_index].time
+        time_diff = (end_time - start_time).total_seconds() - self.max_time
+        time_penalty = time_diff if time_diff>0 else 0.0 # seconds
         
         track.in_goal = self.in_goal()
         track.total_distance = self.get_total_distance()

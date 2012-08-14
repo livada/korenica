@@ -75,6 +75,7 @@ public:
 
     double get_total_distance();
     double get_goal_penalty();
+    unsigned long get_last_index();
     bool in_goal();
 };
 
@@ -98,6 +99,7 @@ extern "C" {
     		{ return task->make_cylinder(lat, lon, radius); }
     double CampusTask_get_total_distance(CampusTask* task){ return task->get_total_distance(); }
     double CampusTask_get_goal_penalty(CampusTask* task){ return task->get_goal_penalty(); }
+    unsigned long CampusTask_get_last_index(CampusTask* task){ return task->get_last_index(); }
     bool CampusTask_in_goal(CampusTask* task){ return task->in_goal(); }
 }
 
