@@ -36,7 +36,7 @@ if __name__ == '__main__':
         task.export_kml(kmlfilename)
         
     elif sys.argv[1] == '--csv-header':
-        print "'filename', 'distance', 'speed', 'penalty time', 'penalty distance', 'in goal', 'time penalty distance', 'task points', 'area coef.', 'area bonus', 'total score';"
+        print "'filename', 'distance', 'speed', 'penalty time', 'time penalty distance', 'in goal', 'penalty distance', 'task points', 'area coef.', 'area bonus', 'total score';"
         sys.exit()
         
     elif sys.argv[1] in ('--csv', '--verbose') or sys.argv[1].endswith('.igc'):

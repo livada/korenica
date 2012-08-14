@@ -101,6 +101,7 @@ class CampusTrack(object):
     def calc_poly_coef(self):
         # Only for triangle for now.
         if len(self.poly_legs)!=3:
+            self.poly_coef = 0.0
             return
         
         a, b, c = self.poly_legs
