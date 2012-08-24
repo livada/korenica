@@ -150,6 +150,36 @@ class CampusTrack(object):
             for wpt in self.waypoints:
                 f.write('  %f,%f,0 \n' % (wpt[1], wpt[0]))
             f.write(footer)
+            
+    def export_poly_kml(self, filename):
+        header = '''<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Placemark>
+    <name>The Pentagon</name>
+    <Polygon>
+      <extrude>1</extrude>
+      <altitudeMode>relativeToGround</altitudeMode>
+      <outerBoundaryIs>
+        <LinearRing>
+          <coordinates>
+'''
+#            -77.05788457660967,38.87253259892824,100 
+        footer = '''
+          </coordinates>
+        </LinearRing>
+      </outerBoundaryIs>
+    </Polygon>
+  </Placemark>
+</kml>'''
+        # Only triangle for now
+        if len(self.poly_legs)!=3:
+            return
+
+        with open(filename, 'w') as f:
+            f.write(header)
+            for wpt in self.waypoints[1:4]:
+                f.write('  %f,%f,0 \n' % (wpt[1], wpt[0]))
+            f.write(footer)
 
 from igcutils import IGCReader
 from datetime import datetime

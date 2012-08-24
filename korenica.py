@@ -82,6 +82,7 @@ if __name__ == '__main__':
     
         if kmlfilename:
             track.export_kml(kmlfilename)
+            track.export_poly_kml(kmlfilename[:-4]+'_poly.kml')
     else:
         print 'Invalid arguments.\n'
         print __doc__
