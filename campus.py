@@ -203,22 +203,20 @@ class CampusTask(CampusTaskWrapper):
             
             # Crop still points.
             def near(a, b):
-                epsilon = 0.00005
+                epsilon = 0.00002
                 return a+epsilon>b and a-epsilon<b
             
             def avg(l):
                 return sum(l)/len(l)
             
-            still_lats = []
-            still_lons = []
-            p = track.track.pop(0)
-            still_lats.append(p.lat)
-            still_lons.append(p.lon)
-            while near(track.track[0].lat, avg(still_lats)) and near(track.track[0].lon, avg(still_lons)):
+            # Crop from begining
+            while near(track.track[1].lat, track.track[0].lat) and near(track.track[1].lon, track.track[0].lon):
                 p = track.track.pop(0)
-                still_lats.append(p.lat)
-                still_lons.append(p.lon)
-                
+
+            # Crop from end
+            while near(track.track[-2:][0].lat, track.track[-1:][0].lat) and near(track.track[-2:][0].lon, track.track[-1:][0].lon):
+                p = track.track.pop()
+
             # Memorize igc data
             igc_track = track
             

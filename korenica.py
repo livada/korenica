@@ -1,3 +1,4 @@
+#! /usr/bin/python
 """Usage:
 
 python korenica.py [option] input.igc [output.kml] | [task_cylinders.kml]
