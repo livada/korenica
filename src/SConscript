@@ -1,0 +1,12 @@
+Import('env')
+
+_campus = env.SharedLibrary(
+    target='Campus',
+    source=['CampusTask.cpp',],
+    LIBPATH=[],
+    LIBS = ['Geographic',
+            ],
+    SHLIBPREFIX='lib',
+    )
+
+Export('_campus')
