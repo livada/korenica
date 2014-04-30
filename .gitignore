@@ -8,3 +8,7 @@ Release
 *.pyc
 *.so
 
+.sconsign.dblite
+*.log
+*.os
+
