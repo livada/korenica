@@ -27,7 +27,7 @@ if __name__ == '__main__':
                         (44.871002, 15.632666, 20.0), # 1. cilindar Plitvice
                         (44.604398, 15.417794, 28.0), # 2. cilindar Licki Osik - kolodvor
                         (44.554233, 15.957067, 20.0), # 3. cilindar Donji Lapac
-                        (44.697325, 15.781533, 0.4)]) # cilj u kampu
+                        (44.706733, 15.793550, 0.4)]) # cilj na pg sletistu
     
     if sys.argv[1] in ('-h', '--help'): 
         print __doc__
