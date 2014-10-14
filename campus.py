@@ -87,7 +87,7 @@ class CampusTrack(object):
         
     def __str__(self):
         return ', '.join(map(str,(self.total_distance, 
-                self.avg_speed,
+                self.avg_speed * 3600.,
                 self.penalty_seconds,      
                 self.time_penalty,               
                 int(self.in_goal),

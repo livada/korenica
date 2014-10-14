@@ -75,9 +75,9 @@ if __name__ == '__main__':
             print 'In goal:', track.in_goal
             print 'Goal penalty: %.2f km' % track.goal_penalty
             print 'Time penalty: %.2f km (for %.1f seconds)' % (track.time_penalty, track.penalty_seconds)
-            print 'Task score: %.1f' % track.score
+            print 'Task score: %.1f points' % track.score
             print 'Area bonus: %.1f points (%.2f%%)' % (track.score*track.poly_coef, track.poly_coef*100.)
-            print 'Total score: %.1f' % track.score * (1.0 + track.poly_coef)
+            print 'Total score: %.1f points' % (track.score * (1.0 + track.poly_coef))
         else:
             print "'%s'," % infile_igc, track
     
