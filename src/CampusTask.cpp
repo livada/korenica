@@ -10,8 +10,8 @@
 
 
 CampusTask::CampusTask() {
-	this->distance_cache = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2)];
-	for (unsigned long i=0; i<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2); i++)
+	this->distance_cache = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2)];
+	for (unsigned long i=0; i<(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2); i++)
 		this->distance_cache[i] = 0.0;
 }
 
@@ -124,6 +124,15 @@ void CampusTask::do_calculation() {
 		}
 	}
 
+	// Calculate complexity.
+	double complexity = 1.0;
+	for (unsigned int cyl=0; cyl<this->points_in_cylinder.size(); cyl++)
+		if (this->points_in_cylinder[cyl].size())
+			complexity *= this->points_in_cylinder[cyl].size();
+//	std::cout << std::endl;
+//	std::cout << "Complexity: " << complexity / 1e+9 << " G" << std::endl;
+//	std::cout << "Cache size: " << (this->track_lat.size() * (this->track_lat.size()+1)/2) / 1e+6 << " M" << std::endl;
+
 	// Precalculate distance to goal for each track point.
 	for (unsigned long i=0; i<this->track_lat.size(); i++){
 		d = this->calc_inverse(
@@ -224,16 +233,18 @@ double CampusTask::cached_distance(unsigned long i1, unsigned long i2){
 	if (i1==i2) return 0.0;
 	if (i1>i2) swap(i1,i2);
 
-	assert(XY(i1,i2)<(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2));
+	long Z = XY(i1,i2);
 
-	if (this->distance_cache[XY(i1,i2)] == 0.0) {
+	assert(Z<(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2));
+
+	if (this->distance_cache[Z] == 0.0) {
 		double d;
 		d = this->calc_inverse(
 				this->track_lat[i1], this->track_lon[i1],
 				this->track_lat[i2], this->track_lon[i2]);
-		this->distance_cache[XY(i1,i2)] = d;
+		this->distance_cache[Z] = d;
 	}
-	return this->distance_cache[XY(i1,i2)];
+	return this->distance_cache[Z];
 }
 
 double CampusTask::task_distance(vector<unsigned long> task){
