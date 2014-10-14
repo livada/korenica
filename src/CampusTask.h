@@ -9,7 +9,7 @@
 #define CAMPUSTASK_H_
 
 #define MAX_TRACK_PTS 8000
-#define XY(x,y) (y*(y-1)+x) // x,y with x<y!!
+#define XY(x,y) ((((unsigned long)(y*(y-1)))>>1) + x) // x,y with x<y!!
 
 
 #include <iostream>
