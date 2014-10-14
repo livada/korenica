@@ -239,10 +239,13 @@ double CampusTask::cached_distance(unsigned long i1, unsigned long i2){
 double CampusTask::task_distance(vector<unsigned long> task){
 	double task_dist = 0.0;
 
-	if (task.size()<2) return 0.0;
+	if (task.size() == 0) 
+		return 0.0;
 
-	for(unsigned long i=0; i<task.size()-1; i++)
-		task_dist += this->cached_distance(task[i], task[i+1]);
+	if (task.size() > 1) {
+		for(unsigned long i=0; i<task.size()-1; i++)
+			task_dist += this->cached_distance(task[i], task[i+1]);
+	}
 
 	unsigned long last_index = task.back();
 
