@@ -48,7 +48,7 @@ Usage
 
 Add the root of this repository to the $PATH environment variable. In root of the repository execute:
 
-> export PATH=$PATH:`pwd`
+> export PATH=$PATH:\`pwd\`
 
 
 After setting the environment you can use the tool like this:
