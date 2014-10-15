@@ -203,7 +203,7 @@ class CampusTask(CampusTaskWrapper):
             
             # Crop still points.
             def near(a, b):
-                epsilon = 0.00002
+                epsilon = 0.0002
                 return a+epsilon>b and a-epsilon<b
             
             def avg(l):
