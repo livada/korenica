@@ -1,7 +1,7 @@
 korenica
 ========
 
-Console application for processing track logs and generating competition results based on rules devised especially for Ljubomir Tomašković Memorial Competition held traditionally in Korenica, Croatia.
+Console application for processing track logs and generating hang gliding competition results based on rules devised especially for Ljubomir Tomašković Memorial Competition held traditionally in Korenica, Croatia.
 
 
 Copyright (C) 2012-2014 Davor Bokun <bokundavor@gmail.com>
