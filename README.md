@@ -38,6 +38,7 @@ Requirements
 ============
 
 libGeographic (>= 9.3.0)
+
 python (>= 2.7)
 
 
@@ -45,7 +46,16 @@ python (>= 2.7)
 Usage
 =====
 
-korenica.py [option] input.igc [output.kml] | [task_cylinders.kml]
+Add the root of this repository to the $PATH environment variable. In root of the repository execute:
+
+> export PATH=$PATH:`pwd`
+
+
+After setting the environment you can use the tool like this:
+
+
+```
+korenica [option] input.igc [output.kml] | [task_cylinders.kml]
 
 options:
     --verbose (default)  - Verbose track info output
@@ -53,3 +63,4 @@ options:
     --csv-header         - Print header for CSV output
     --task-cylinders     - Output task cylinders to kml file
     -h --help            - Print this help 
+```
