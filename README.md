@@ -19,7 +19,11 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
+
+
+
+NOTE: Although this program is licensed under GPL the actual rules it implements are not. To use these rules for a competition or distribute them you have to acquire a permission from the author (Davor Bokun <bokundavor@gmail.com>). Please contact the author for more details.
+
 
 Build
 =====
