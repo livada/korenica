@@ -175,8 +175,8 @@ const char* CampusTask::get_waypoints() {
 		ss << "|";
 	}
 	ss << this->min_dist_from_goal_index[this->waypoint_indices.back()];
-	string s(ss.str());
-	return s.c_str();
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
 }
 
 const char* CampusTask::get_leg_distances() {
@@ -190,8 +190,8 @@ const char* CampusTask::get_leg_distances() {
 	}
 	ss << this->dist_from_goal[this->waypoint_indices.back()];
 
-	string s(ss.str());
-	return s.c_str();
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
 }
 
 const char* CampusTask::get_poly_leg_distances() {
@@ -205,8 +205,8 @@ const char* CampusTask::get_poly_leg_distances() {
 	}
 	ss << this->cached_distance(this->waypoint_indices.back(), this->waypoint_indices[1]);
 
-	string s(ss.str());
-	return s.c_str();
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
 }
 
 const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
@@ -218,8 +218,9 @@ const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 		ss << lat2 << "," << lon2;
 		ss << "|";
 	}
-	string s(ss.str());
-	return s.c_str();
+
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
 }
 
 

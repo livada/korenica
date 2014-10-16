@@ -34,6 +34,8 @@ private:
 	double goal_lon;
 	double goal_radius;
 
+	string output_sbuffer;
+
 	vector< vector<unsigned long> > points_in_cylinder;
 	vector<double> dist_from_goal;
 	vector<double> min_dist_from_goal;
