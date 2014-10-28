@@ -13,6 +13,9 @@ options:
 """
 
 if __name__ == '__main__':
+    import sys
+    sys.path.append('/usr/share/pyshared/korenica')
+    
     from igcutils import IGCReader
     from campus import CampusTask
     
