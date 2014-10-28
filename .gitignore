@@ -1,5 +1,14 @@
-.cproject
+Debug
+Release
+
 .project
+.cproject
+.pydevproject
+.settings
 *.pyc
 *.so
+
+.sconsign.dblite
+*.log
+*.os
 

@@ -8,8 +8,8 @@
 #ifndef CAMPUSTASK_H_
 #define CAMPUSTASK_H_
 
-#define MAX_TRACK_PTS 4000
-#define XY(x,y) (y*(y-1)+x) // x,y with x<y!!
+#define MAX_TRACK_PTS 8000
+#define XY(x,y) ((((unsigned long)(y*(y-1)))>>1) + x) // x,y with x<y!!
 
 
 #include <iostream>
@@ -34,6 +34,8 @@ private:
 	double goal_lon;
 	double goal_radius;
 
+	string output_sbuffer;
+
 	vector< vector<unsigned long> > points_in_cylinder;
 	vector<double> dist_from_goal;
 	vector<double> min_dist_from_goal;
@@ -45,12 +47,12 @@ private:
 	vector<unsigned long> waypoint_indices, test_indices;
 	double waypoint_dist;
 
-	double *distance_cashe;
+	double *distance_cache;
 
 	double task_distance(vector<unsigned long>);
 	void waypoint_recursion(unsigned long index, unsigned long cylinder);
 
-	double cashed_distance(unsigned long i1, unsigned long i2);
+	double cached_distance(unsigned long i1, unsigned long i2);
 
 	double calc_inverse(double lat1, double lon1, double lat2, double lon2);
 
@@ -68,11 +70,14 @@ public:
 
     long number_of_wpts();
     const char* get_waypoints();
+    const char* get_leg_distances();
+    const char* get_poly_leg_distances();
 
     const char* make_cylinder(double lat, double lon, double radius);
 
     double get_total_distance();
     double get_goal_penalty();
+    unsigned long get_last_index();
     bool in_goal();
 };
 
@@ -90,10 +95,13 @@ extern "C" {
     void CampusTask_do_calculation(CampusTask* task){ task->do_calculation(); }
     long CampusTask_number_of_wpts(CampusTask* task){ return task->number_of_wpts(); }
     const char* CampusTask_get_waypoints(CampusTask* task){ return task->get_waypoints(); }
+    const char* CampusTask_get_leg_distances(CampusTask* task){ return task->get_leg_distances(); }
+    const char* CampusTask_get_poly_leg_distances(CampusTask* task){ return task->get_poly_leg_distances(); }
     const char* CampusTask_make_cylinder(CampusTask* task, double lat, double lon, double radius)
     		{ return task->make_cylinder(lat, lon, radius); }
     double CampusTask_get_total_distance(CampusTask* task){ return task->get_total_distance(); }
     double CampusTask_get_goal_penalty(CampusTask* task){ return task->get_goal_penalty(); }
+    unsigned long CampusTask_get_last_index(CampusTask* task){ return task->get_last_index(); }
     bool CampusTask_in_goal(CampusTask* task){ return task->in_goal(); }
 }
 
