@@ -1,0 +1,11 @@
+Source: korenica
+Maintainer: Davor Bokun <bokundavor@gmail.com>
+Section: misc
+Priority: optional
+Build-Depends: debhelper (>= 9)
+
+Package: korenica
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Korenica Hang-gliding Competition
+ Console application for processing track logs and generating hang gliding competition results based on rules devised especially for Ljubomir Tomašković Memorial Competition held traditionally in Korenica, Croatia.

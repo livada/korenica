@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+SCONS=scons 
+DEB_DESTDIR=$(CURDIR)/debian/korenica
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(SCONS) --prefix=$(DEB_DESTDIR)/usr
+
+override_dh_auto_clean:
+	dh_auto_clean
+	$(SCONS)  -c
+
+override_dh_auto_install:
+	$(SCONS) install --prefix=$(DEB_DESTDIR)/usr
