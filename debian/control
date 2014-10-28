@@ -2,7 +2,7 @@ Source: korenica
 Maintainer: Davor Bokun <bokundavor@gmail.com>
 Section: misc
 Priority: optional
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 9), scons (>= 2.3.0), libgeographiclib-dev (>= 1.21)
 
 Package: korenica
 Architecture: any
