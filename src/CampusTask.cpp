@@ -6,15 +6,17 @@
  */
 
 #include "CampusTask.h"
+#include <assert.h>
+
 
 CampusTask::CampusTask() {
-	this->distance_cashe = (double *) malloc(MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2 * sizeof(double));
-	for (unsigned long i=0; i<MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2; i++)
-		this->distance_cashe[i] = 0.0;
+	this->distance_cache = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2)];
+	for (unsigned long i=0; i<(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2); i++)
+		this->distance_cache[i] = 0.0;
 }
 
 CampusTask::~CampusTask() {
-	free(this->distance_cashe);
+	delete[] this->distance_cache;
 }
 
 void CampusTask::flush_task() {
@@ -38,7 +40,7 @@ void CampusTask::flush_task() {
 	this->test_indices.clear();
 	this->waypoint_dist = 0.0;
 
-	std::cout << "Task cleared." << std::endl;
+//	std::cout << "Task cleared." << std::endl;
 }
 
 void CampusTask::flush_track() {
@@ -46,7 +48,7 @@ void CampusTask::flush_track() {
 	this->track_lon.clear();
 
 	for (unsigned long i=0; i<MAX_TRACK_PTS * (MAX_TRACK_PTS-1)/2; i++)
-		this->distance_cashe[i] = 0.0;
+		this->distance_cache[i] = 0.0;
 
 	this->points_in_cylinder.clear();
 	this->dist_from_goal.clear();
@@ -60,7 +62,7 @@ void CampusTask::flush_track() {
 	this->test_indices.clear();
 	this->waypoint_dist = 0.0;
 
-	std::cout << "Track cleared." << std::endl;
+//	std::cout << "Track cleared." << std::endl;
 }
 
 void CampusTask::push_task_cylinder(double lat, double lon, double radius) {
@@ -84,7 +86,7 @@ void CampusTask::waypoint_recursion(unsigned long index, unsigned long cylinder)
 		if (this->points_in_cylinder[cylinder][i]<index)
 			continue;
 		// Try with this point in this cylinder.
-		this->test_indices[cylinder] = this->points_in_cylinder[cylinder][i];
+		this->test_indices.back() = this->points_in_cylinder[cylinder][i];
 		// Recurse in the rest of the cylinders.
 		if (cylinder+1<this->cylinder_lat.size())
 			this->waypoint_recursion(this->test_indices[cylinder]+1, cylinder+1);
@@ -99,7 +101,7 @@ void CampusTask::waypoint_recursion(unsigned long index, unsigned long cylinder)
 }
 
 void CampusTask::do_calculation() {
-	std::cout << "Grab last cylinder as goal." << std::endl;
+//	std::cout << "Grab last cylinder as goal." << std::endl;
 
 	this->goal_lat = this->cylinder_lat.back();
 	this->goal_lon = this->cylinder_lon.back();
@@ -109,7 +111,7 @@ void CampusTask::do_calculation() {
 	this->cylinder_lon.pop_back();
 	this->cylinder_radius.pop_back();
 
-	std::cout << "Precalculation..." << std::endl;
+//	std::cout << "Precalculation..." << std::endl;
 	double d;
 	for (unsigned int cyl=0; cyl<this->cylinder_lat.size(); cyl++){
 		this->points_in_cylinder.push_back(vector<unsigned long>());
@@ -121,6 +123,15 @@ void CampusTask::do_calculation() {
 				this->points_in_cylinder[cyl].push_back(i);
 		}
 	}
+
+	// Calculate complexity.
+	double complexity = 1.0;
+	for (unsigned int cyl=0; cyl<this->points_in_cylinder.size(); cyl++)
+		if (this->points_in_cylinder[cyl].size())
+			complexity *= this->points_in_cylinder[cyl].size();
+//	std::cout << std::endl;
+//	std::cout << "Complexity: " << complexity / 1e+9 << " G" << std::endl;
+//	std::cout << "Cache size: " << (this->track_lat.size() * (this->track_lat.size()+1)/2) / 1e+6 << " M" << std::endl;
 
 	// Precalculate distance to goal for each track point.
 	for (unsigned long i=0; i<this->track_lat.size(); i++){
@@ -145,11 +156,11 @@ void CampusTask::do_calculation() {
 		this->min_dist_from_goal_index[i] = d_index;
 	}
 
-	std::cout << "Starting calculation..." << std::endl;
+//	std::cout << "Starting calculation..." << std::endl;
 	this->waypoint_dist = 0.0;
 	this->waypoint_recursion(0, 0);
 
-	std::cout << "Done calculation." << std::endl;
+//	std::cout << "Done calculation." << std::endl;
 }
 
 long CampusTask::number_of_wpts() {
@@ -164,8 +175,38 @@ const char* CampusTask::get_waypoints() {
 		ss << "|";
 	}
 	ss << this->min_dist_from_goal_index[this->waypoint_indices.back()];
-	string s(ss.str());
-	return s.c_str();
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
+}
+
+const char* CampusTask::get_leg_distances() {
+	stringstream ss;
+
+	if (this->waypoint_indices.size()<2) return "0";
+
+	for (unsigned long i=0; i<this->waypoint_indices.size()-1; i++) {
+		ss << this->cached_distance(this->waypoint_indices[i], this->waypoint_indices[i+1]);
+		ss << "|";
+	}
+	ss << this->dist_from_goal[this->waypoint_indices.back()];
+
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
+}
+
+const char* CampusTask::get_poly_leg_distances() {
+	stringstream ss;
+
+	if (this->waypoint_indices.size()<4) return "0";
+
+	for (unsigned long i=1; i<this->waypoint_indices.size()-1; i++) {
+		ss << this->cached_distance(this->waypoint_indices[i], this->waypoint_indices[i+1]);
+		ss << "|";
+	}
+	ss << this->cached_distance(this->waypoint_indices.back(), this->waypoint_indices[1]);
+
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
 }
 
 const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
@@ -173,12 +214,13 @@ const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 	Math::real azi, lat2, lon2, azi2, m12;
 
 	for (azi=0.0; azi<=360.0; azi += 3.0) {
-		Geodesic::WGS84.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12, false);
+		Geodesic::WGS84.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12);
 		ss << lat2 << "," << lon2;
 		ss << "|";
 	}
-	string s(ss.str());
-	return s.c_str();
+
+	this->output_sbuffer = ss.str();
+	return this->output_sbuffer.c_str();
 }
 
 
@@ -188,26 +230,34 @@ double CampusTask::calc_inverse(double lat1, double lon1, double lat2, double lo
 	return s12/1000.0;
 }
 
-double CampusTask::cashed_distance(unsigned long i1, unsigned long i2){
+double CampusTask::cached_distance(unsigned long i1, unsigned long i2){
 	if (i1==i2) return 0.0;
 	if (i1>i2) swap(i1,i2);
-	if (this->distance_cashe[XY(i1,i2)] == 0.0) {
+
+	long Z = XY(i1,i2);
+
+	assert(Z<(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2));
+
+	if (this->distance_cache[Z] == 0.0) {
 		double d;
 		d = this->calc_inverse(
 				this->track_lat[i1], this->track_lon[i1],
 				this->track_lat[i2], this->track_lon[i2]);
-		this->distance_cashe[XY(i1,i2)] = d;
+		this->distance_cache[Z] = d;
 	}
-	return this->distance_cashe[XY(i1,i2)];
+	return this->distance_cache[Z];
 }
 
 double CampusTask::task_distance(vector<unsigned long> task){
 	double task_dist = 0.0;
 
-	if (task.size()<2) return 0.0;
+	if (task.size() == 0) 
+		return 0.0;
 
-	for(unsigned long i=0; i<task.size()-1; i++)
-		task_dist += this->cashed_distance(task[i], task[i+1]);
+	if (task.size() > 1) {
+		for(unsigned long i=0; i<task.size()-1; i++)
+			task_dist += this->cached_distance(task[i], task[i+1]);
+	}
 
 	unsigned long last_index = task.back();
 
@@ -222,6 +272,10 @@ double CampusTask::get_total_distance() {
 
 double CampusTask::get_goal_penalty(){
 	return this->min_dist_from_goal[this->waypoint_indices.back()];
+}
+
+unsigned long CampusTask::get_last_index(){
+	return this->min_dist_from_goal_index[this->waypoint_indices.back()];
 }
 
 bool CampusTask::in_goal() {
