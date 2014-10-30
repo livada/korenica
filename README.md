@@ -72,7 +72,7 @@ Usage
 
 Add the install directory to the $PATH environment variable. In root of the repository execute:
 
-> export PATH=$PATH:\<path-to-install-dir\>
+> export PATH=$PATH:\<path-to-install-dir\>/bin
 
 
 After setting the environment you can use the tool like this:
