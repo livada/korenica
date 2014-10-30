@@ -18,8 +18,14 @@ options:
 """
 
 if __name__ == '__main__':
-    import sys
-    sys.path.append('/usr/share/pyshared/korenica')
+    try:
+        import campus
+    except ImportError:
+        import sys
+        import os
+        pymodules_path = os.path.join(os.path.dirname(__file__),
+                                      '../share/pyshared/korenica')
+        sys.path.append(pymodules_path)
     
     from igcutils import IGCReader
     from campus import CampusTask
