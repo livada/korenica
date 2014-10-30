@@ -1,7 +1,12 @@
 #! /usr/bin/python
+# -*- coding: utf-8 -*-
 """Usage:
 
-python korenica.py [option] input.igc [output.kml] | [task_cylinders.kml]
+korenica [option] input.igc [output.kml] | [task_cylinders.kml]
+
+generates hang gliding competition results based on rules devised especially 
+for Ljubomir Tomašković Memorial Competition held traditionally in Korenica, 
+Croatia.
 
 options:
     --verbose (default)  - Verbose track info output
