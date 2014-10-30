@@ -25,17 +25,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 NOTE: Although this program is licensed under GPL the actual rules it implements are not. To use these rules for a competition or distribute them you have to acquire a permission from the author (Davor Bokun <bokundavor@gmail.com>). Please contact the author for more details.
 
 
+Installation
+============
+
+Released linux binaries are available at launchpad PPA.
+
+ppa:bokundavor/livada.ppa
+
+To install the latest released version on Ubuntu or Debian execute:
+
+> sudo apt-add-repository ppa:bokundavor/livada.ppa
+
+> sudo apt-get update
+
+> sudo apt-get install korenica
+
+For more info go to 
+
+https://launchpad.net/~bokundavor/+archive/ubuntu/livada.ppa
+
+
 Build
 =====
 
 For optimized version use:
 
-> scons all install
+> scons all install --prefix=\<path-to-install-dir\>
 
 
 If you need debug symbols use --debug-flags like this:
 
-> scons --debug-flags all install
+> scons --debug-flags all install --prefix=\<path-to-install-dir\>
 
 
 Requirements
@@ -50,9 +70,9 @@ python (>= 2.7)
 Usage
 =====
 
-Add the root of this repository to the $PATH environment variable. In root of the repository execute:
+Add the install directory to the $PATH environment variable. In root of the repository execute:
 
-> export PATH=$PATH:\`pwd\`
+> export PATH=$PATH:\<path-to-install-dir\>
 
 
 After setting the environment you can use the tool like this:
