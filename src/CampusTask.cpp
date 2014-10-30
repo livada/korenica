@@ -182,6 +182,9 @@ const char* CampusTask::get_waypoints() {
 const char* CampusTask::get_leg_distances() {
 	stringstream ss;
 
+	ss << std::scientific;
+	ss.precision(15);
+
 	if (this->waypoint_indices.size()<2) return "0";
 
 	for (unsigned long i=0; i<this->waypoint_indices.size()-1; i++) {
@@ -196,6 +199,9 @@ const char* CampusTask::get_leg_distances() {
 
 const char* CampusTask::get_poly_leg_distances() {
 	stringstream ss;
+
+	ss << std::scientific;
+	ss.precision(15);
 
 	if (this->waypoint_indices.size()<4) return "0";
 
@@ -213,7 +219,10 @@ const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 	stringstream ss;
 	Math::real azi, lat2, lon2, azi2, m12;
 
-	for (azi=0.0; azi<=360.0; azi += 3.0) {
+	ss << std::scientific;
+	ss.precision(15);
+
+	for (azi=0.0; azi<=360.0; azi += 1.50) {
 		Geodesic::WGS84.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12);
 		ss << lat2 << "," << lon2;
 		ss << "|";
