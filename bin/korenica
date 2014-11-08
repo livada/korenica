@@ -1,105 +1,166 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""Usage:
-
-korenica [option] input.igc [output.kml] | [task_cylinders.kml]
-
-generates hang gliding competition results based on rules devised especially 
-for Ljubomir Tomašković Memorial Competition held traditionally in Korenica, 
-Croatia.
-
-options:
-    --verbose (default)  - Verbose track info output
-    --csv                - Only CSV output
-    --csv-header         - Print header for CSV output
-    --task-cylinders     - Output task cylinders to kml file
-    -h --help            - Print this help 
-
+"""Generates hang gliding competition results based on rules devised 
+specifically for Ljubomir Tomašković Memorial Competition held traditionally 
+in Korenica, Croatia.
 """
 
-if __name__ == '__main__':
-    try:
-        import campus
-    except ImportError:
-        import sys
-        import os
-        pymodules_path = os.path.join(os.path.dirname(__file__),
-                                      '../share/pyshared/korenica')
-        sys.path.append(pymodules_path)
-    
-    from igcutils import IGCReader
-    from campus import CampusTask
-    
-    import sys
-    
-    if len(sys.argv)<2:
-        print 'Invalid option.\n'
-        print __doc__
-        sys.exit()
-    
-    task = CampusTask([ (44.704578, 15.819669,  2.0), # startni cilindar 
-                        (44.871002, 15.632666, 20.0), # 1. cilindar Plitvice
-                        (44.604398, 15.417794, 28.0), # 2. cilindar Licki Osik - kolodvor
-                        (44.554233, 15.957067, 20.0), # 3. cilindar Donji Lapac
-                        (44.706733, 15.793550, 0.4)]) # cilj na pg sletistu
-    
-    if sys.argv[1] in ('-h', '--help'): 
-        print __doc__
-        
-    elif sys.argv[1] == '--task-cylinders':
-        kmlfilename = sys.argv[2] if len(sys.argv)>2 else 'task_cylinders.kml'
-        task.export_kml(kmlfilename)
-        
-    elif sys.argv[1] == '--csv-header':
-        print "'filename', 'distance', 'speed', 'penalty time', 'time penalty distance', 'in goal', 'penalty distance', 'task points', 'area coef.', 'area bonus', 'total score';"
-        sys.exit()
-        
-    elif sys.argv[1] in ('--csv', '--verbose') or sys.argv[1].endswith('.igc'):
-        
-        if sys.argv[1] in ('--csv', '--verbose'):
-            if len(sys.argv)<3:
-                print 'Must specify input igc file.\n'
-                print __doc__
-                sys.exit()
-            infile_igc = sys.argv[2]
-            kmlfilename = sys.argv[3] if len(sys.argv)>3 else None
-        else:
-            infile_igc = sys.argv[1]
-            kmlfilename = sys.argv[2] if len(sys.argv)>2 else None
+__author__ = "Davor Bokun"
+__copyright__ = "Copyright (C) 2012-2014 Davor Bokun <bokundavor@gmail.com>"
+__credits__ = ["Davor Bokun"]
+__license__ = "GPL"
+__version__ = '1.1'
+__maintainer__ = "Davor Bokun"
+__email__ = "bokundavor@gmail.com"
+__status__ = "Production"
 
 
-        verbose = not sys.argv[1]=='--csv'
-        
-        if verbose:
-            print '#'*44
-            print '# Processing: %s' % infile_igc
-    
-        igc = IGCReader(infile_igc)
+import sys
 
-        if verbose:
-            print 'Track Points:', len(igc.track)
-        
-        track = task.process(igc)
+if __name__!='__main__':
+    # Do not allow importing as module
+    sys.exit()
     
-        if verbose:
-            print '\nCourse coordinates:'
-            print '\n'.join(map(lambda x: '%.5f %.5f' % x, track.waypoints))
-            print
-            print 'Total distance: %.2f km (avg.speed %.2f km/h)' % (track.total_distance, track.avg_speed*3600)
-            print 'In goal:', track.in_goal
-            print 'Goal penalty: %.2f km' % track.goal_penalty
-            print 'Time penalty: %.2f km (for %.1f seconds)' % (track.time_penalty, track.penalty_seconds)
-            print 'Task score: %.1f points' % track.score
-            print 'Area bonus: %.1f points (%.2f%%)' % (track.score*track.poly_coef, track.poly_coef*100.)
-            print 'Total score: %.1f points' % (track.score * (1.0 + track.poly_coef))
-        else:
-            print "'%s'," % infile_igc, track
+
+try:
+    import campus
+except ImportError:
+    import os
+    pymodules_path = os.path.join(os.path.dirname(__file__),
+                                  '../share/pyshared/korenica')
+    sys.path.append(pymodules_path)
+
+from igcutils import IGCReader
+from campus import CampusTask
+import argparse
+
+parser = argparse.ArgumentParser(
+
+description='\
+generate hang gliding competition results based on rules devised especially \
+for Ljubomir Tomašković Memorial Competition held traditionally in Korenica, \
+Croatia.',
+
+epilog='NOTE: Although this program is licensed under GPL the actual \
+rules it implements are not. To use these rules for a competition or \
+distribute them you have to acquire a permission from the author \
+(Davor Bokun <bokundavor@gmail.com>). Please contact the author for \
+more details.',
+add_help=False
+)
+
+subparsers = parser.add_subparsers(dest='command')
+
+parser_process = subparsers.add_parser('process', help='standard processing command')
+process_options = parser_process.add_argument_group('processing options')
+process_options.add_argument('input_igc', type=str, 
+                              metavar='input.igc', nargs=1, 
+                              help='input igc track log file')
+process_options.add_argument('output_kml', type=str, 
+                              metavar='output.kml', nargs='?', 
+                              help='output task track kml file')
+process_options.add_argument('--task-file',
+                                help='use specific task file for kml output') 
+
+# csv command options
+parser_csv = subparsers.add_parser('csv', help='generating csv output')
+csv_options = parser_csv.add_argument_group('processing options')
+csv_options.add_argument('input_igc', type=str, 
+                         metavar='input.igc', nargs='?', 
+                         help='input igc track log file')
+csv_options.add_argument('output_kml', type=str,
+                         metavar='output.kml', nargs='?', 
+                         help='output task track kml file')
+csv_options.add_argument('--task-file',
+                            help='use specific task file for kml output') 
+csv_options.add_argument('--header', action='store_true',
+                            help='print column headers in csv format') 
+
+# task command options
+parser_task = subparsers.add_parser('task', 
+                                    help='managing task files') 
+task_options = parser_task.add_argument_group('options')
+task_options.add_argument('--init', type=str, default=argparse.SUPPRESS,
+                             metavar='TASK_FILE', nargs='?',
+                             help='initialize task definition file') 
+task_options.add_argument('--output-kml', type=str, default=argparse.SUPPRESS,
+                             metavar='OUTPUT_FILE', nargs='?',
+                             help='output task cylinders to kml file')
+task_options.add_argument('--task-file', default=argparse.SUPPRESS,
+                             help='use specific task file for kml output') 
+
+# group standard options 
+other_group = parser.add_argument_group('other options')
+other_group.add_argument('-v', '--version', action='version', 
+                         version='%(prog)s version ' + __version__)
+other_group.add_argument('-h', '--help', action='help',
+                         help='show this help message and exit')
+
+
+args = parser.parse_args()
+
+task = CampusTask([ (44.704578, 15.819669,  2.0), # startni cilindar 
+                    (44.871002, 15.632666, 20.0), # 1. cilindar Plitvice
+                    (44.604398, 15.417794, 28.0), # 2. cilindar Licki Osik - kolodvor
+                    (44.554233, 15.957067, 20.0), # 3. cilindar Donji Lapac
+                    (44.706733, 15.793550, 0.4)]) # cilj na pg sletistu
+
+if 'task_file' in args:
+    task.load(args.task_file)
+
+if args.command=='process':
+    print '#'*44
+    print '# Processing: %s' % args.input_igc
+
+    igc = IGCReader(args.input_igc)
+
+    print 'Track Points:', len(igc.track)
     
-        if kmlfilename:
-            track.export_kml(kmlfilename)
-            track.export_poly_kml(kmlfilename[:-4]+'_poly.kml')
+    track = task.process(igc)
+
+    print '\nCourse coordinates:'
+    print '\n'.join(map(lambda x: '%.5f %.5f' % x, track.waypoints))
+    print
+    print 'Total distance: %.2f km (avg.speed %.2f km/h)' % (track.total_distance, track.avg_speed*3600)
+    print 'In goal:', track.in_goal
+    print 'Goal penalty: %.2f km' % track.goal_penalty
+    print 'Time penalty: %.2f km (for %.1f seconds)' % (track.time_penalty, track.penalty_seconds)
+    print 'Task score: %.1f points' % track.score
+    print 'Area bonus: %.1f points (%.2f%%)' % (track.score*track.poly_coef, track.poly_coef*100.)
+    print 'Total score: %.1f points' % (track.score * (1.0 + track.poly_coef))
+
+
+    if args.output_kml is not None:
+        track.export_kml(args.output_kml)
+        track.export_poly_kml(args.output_kml[:-4]+'_poly.kml')
+    
+
+elif args.command=='csv':
+    if args.header:
+        print "'filename', 'Distance [km]', 'Speed [km/h]', 'Penalty time [s]', \
+'Time penalty distance [km]', 'In goal', 'Penalty distance [km]', \
+'Task points', 'Area coef.', 'Area bonus', 'Total score';"
     else:
-        print 'Invalid arguments.\n'
-        print __doc__
-        sys.exit()
-    
+        igc = IGCReader(args.input_igc)
+        track = task.process(igc)
+        
+        print "'%s'," % args.input_igc, track
+        
+        if args.output_kml is not None:
+            track.export_kml(args.output_kml)
+            track.export_poly_kml(args.output_kml[:-4]+'_poly.kml')
+
+
+elif args.command=='task':
+    if 'init' in args:
+        task_file = 'my_task.cfg'
+        if args.init is not None:
+            task_file = args.init
+        task.save(task_file)
+    if 'output_kml' in args:
+        output_file = 'task_cylinders.kml'
+        if args.output_kml is not None:
+            output_file = args.output_kml
+        task.export_kml(output_file)
+    print task
+
