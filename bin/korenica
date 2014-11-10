@@ -54,7 +54,7 @@ subparsers = parser.add_subparsers(dest='command')
 parser_process = subparsers.add_parser('process', help='standard processing command')
 process_options = parser_process.add_argument_group('processing options')
 process_options.add_argument('input_igc', type=str, 
-                              metavar='input.igc', nargs=1, 
+                              metavar='input.igc',
                               help='input igc track log file')
 process_options.add_argument('output_kml', type=str, 
                               metavar='output.kml', nargs='?', 
