@@ -334,14 +334,11 @@ class CampusTask(CampusTaskWrapper):
         with open(filename, 'w') as f:
             f.write(header)
             for cyl in self.cylinders:
-                pts = self.make_cylinder(*cyl).split('|')[:-1]
+                pts = self.make_cylinder(*cyl[:3]).split('|')[:-1]
                 f.write(placemark_begin)
                 for point in pts:
                     p = point.split(',')
                     f.write('  %s,%s,3000.0 \n' % (p[1], p[0]))
                 f.write(placemark_end)
             f.write(footer)
-        
-        
-        
         
