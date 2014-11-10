@@ -59,7 +59,7 @@ process_options.add_argument('input_igc', type=str,
 process_options.add_argument('output_kml', type=str, 
                               metavar='output.kml', nargs='?', 
                               help='output task track kml file')
-process_options.add_argument('--task-file',
+process_options.add_argument('--task-file', default=argparse.SUPPRESS,
                                 help='use specific task file for kml output') 
 
 # csv command options
@@ -71,7 +71,7 @@ csv_options.add_argument('input_igc', type=str,
 csv_options.add_argument('output_kml', type=str,
                          metavar='output.kml', nargs='?', 
                          help='output task track kml file')
-csv_options.add_argument('--task-file',
+csv_options.add_argument('--task-file', default=argparse.SUPPRESS,
                             help='use specific task file for kml output') 
 csv_options.add_argument('--header', action='store_true',
                             help='print column headers in csv format') 
@@ -101,10 +101,14 @@ other_group.add_argument('-h', '--help', action='help',
 
 args = parser.parse_args()
 
-
+task = None
 if 'task_file' in args:
-    task = CampusTask.from_file(args.task_file)
-else:
+    try:
+        task = CampusTask.from_file(args.task_file)
+    except:
+        print 'Warning: Unable to load task definition file. Using default...'
+
+if task is None:
     task = CampusTask([ (44.704578, 15.819669,  2.0, 'Startni cilindar'),
                         (44.871002, 15.632666, 20.0, '1. cilindar Plitvice'),
                         (44.604398, 15.417794, 28.0, '2. cilindar Licki Osik - kolodvor'),
