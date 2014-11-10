@@ -77,14 +77,34 @@ Add the install directory to the $PATH environment variable. In root of the repo
 
 After setting the environment you can use the tool like this:
 
+```
+korenica process [-h] [--task-file TASK_FILE] input.igc [output.kml]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+processing options:
+  input.igc             input igc track log file
+  output.kml            output task track kml file
+  --task-file TASK_FILE
+                        use specific task file for kml output
+```
+
+Task definition can be customized with simple text file. This file can be generated with 'task' command like this:
 
 ```
-korenica [option] input.igc [output.kml] | [task_cylinders.kml]
+korenica task [-h] [--init [TASK_FILE]] [--output-kml [OUTPUT_FILE]]
+                     [--task-file TASK_FILE] [--verbose]
+
+optional arguments:
+  -h, --help            show this help message and exit
 
 options:
-    --verbose (default)  - Verbose track info output
-    --csv                - Only CSV output
-    --csv-header         - Print header for CSV output
-    --task-cylinders     - Output task cylinders to kml file
-    -h --help            - Print this help 
+  --init [TASK_FILE]    initialize task definition file
+  --output-kml [OUTPUT_FILE]
+                        output task cylinders to kml file
+  --task-file TASK_FILE
+                        use specific task file for kml output
+  --verbose             send task to stdout
 ```
+
