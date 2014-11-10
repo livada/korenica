@@ -88,6 +88,8 @@ task_options.add_argument('--output-kml', type=str, default=argparse.SUPPRESS,
                              help='output task cylinders to kml file')
 task_options.add_argument('--task-file', default=argparse.SUPPRESS,
                              help='use specific task file for kml output') 
+task_options.add_argument('--verbose', action='store_true',
+                            help='send task to stdout') 
 
 # group standard options 
 other_group = parser.add_argument_group('other options')
@@ -99,14 +101,15 @@ other_group.add_argument('-h', '--help', action='help',
 
 args = parser.parse_args()
 
-task = CampusTask([ (44.704578, 15.819669,  2.0), # startni cilindar 
-                    (44.871002, 15.632666, 20.0), # 1. cilindar Plitvice
-                    (44.604398, 15.417794, 28.0), # 2. cilindar Licki Osik - kolodvor
-                    (44.554233, 15.957067, 20.0), # 3. cilindar Donji Lapac
-                    (44.706733, 15.793550, 0.4)]) # cilj na pg sletistu
 
 if 'task_file' in args:
-    task.load(args.task_file)
+    task = CampusTask.from_file(args.task_file)
+else:
+    task = CampusTask([ (44.704578, 15.819669,  2.0, 'Startni cilindar'),
+                        (44.871002, 15.632666, 20.0, '1. cilindar Plitvice'),
+                        (44.604398, 15.417794, 28.0, '2. cilindar Licki Osik - kolodvor'),
+                        (44.554233, 15.957067, 20.0, '3. cilindar Donji Lapac'),
+                        (44.706733, 15.793550,  0.4, 'Cilj na pg sletistu')])
 
 if args.command=='process':
     print '#'*44
@@ -162,5 +165,6 @@ elif args.command=='task':
         if args.output_kml is not None:
             output_file = args.output_kml
         task.export_kml(output_file)
-    print task
+    if args.verbose or not ('init' in args or 'output_kml' in args):
+        print str(task)
 
