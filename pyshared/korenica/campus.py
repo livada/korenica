@@ -183,14 +183,52 @@ class CampusTrack(object):
 
 from igcutils import IGCReader
 from datetime import datetime
+import re
 
 class CampusTask(CampusTaskWrapper):
+    @staticmethod
+    def from_file(filename):
+        task = []
+        maxtime = None
+        with open(filename, 'r') as f:
+            for line in f:
+                if '=' in line:
+                    param, value = map(str.strip, re.split('=', line))
+                    if param=='maxtime':
+                        maxtime = eval(value)
+                else:
+                    comment = None
+                    if '#' in line:
+                        line, comment = map(str.strip, re.split('#', line, maxsplit=1))
+                    try: 
+                        lat, lon, r = map(float, re.split('\s*,\s*', line, maxsplit=2))
+                    except:
+                        continue
+                    task.append((lat, lon, r, comment))
+        
+        return CampusTask(task) if maxtime is None else CampusTask(task, maxtime)
+    
     def __init__(self, task, max_time=2*3600+15*60+46):
         super(CampusTask, self).__init__()
         self.cylinders = task
         self.max_time = max_time
         for c in task:
-            self.push_task_cylinder(*c)
+            self.push_task_cylinder(*c[:3])
+
+    def save(self, filename):
+        with open(filename, 'w') as f:
+            f.write(str(self))
+    
+    def __str__(self):
+        lines = ['maxtime = %d' % self.max_time]
+        for cylinder in self.cylinders:
+            data = ', '.join(map(str, cylinder[:3]))
+            if len(cylinder)>3 and cylinder[3] is not None:
+                comment = ' # ' + ' '.join(map(str, cylinder[3:]))
+            else:
+                comment = ''
+            lines.append(data + comment)
+        return '\n'.join(lines)
 
     def process(self, track):
         total_time = 2*3600 + 15*60 + 46 # seconds
