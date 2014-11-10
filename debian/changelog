@@ -1,3 +1,9 @@
+korenica (1.1-1) trusty; urgency=medium
+
+  * Imported Upstream version 1.1
+
+ -- Davor Bokun <bokundavor@gmail.com>  Mon, 10 Nov 2014 01:51:22 +0100
+
 korenica (1.0-2) trusty; urgency=medium
 
   * Initial release.
