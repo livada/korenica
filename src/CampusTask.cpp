@@ -9,7 +9,10 @@
 #include <assert.h>
 
 
-CampusTask::CampusTask() {
+CampusTask::CampusTask() :
+	geod(Constants::WGS84_a(), Constants::WGS84_f())
+{
+
 	this->distance_cache = new double[(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2)];
 	for (unsigned long i=0; i<(MAX_TRACK_PTS * (MAX_TRACK_PTS+1)/2); i++)
 		this->distance_cache[i] = 0.0;
@@ -223,7 +226,7 @@ const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 	ss.precision(15);
 
 	for (azi=0.0; azi<=360.0; azi += 1.50) {
-		Geodesic::WGS84.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12);
+		geod.Direct(lat, lon, azi, radius*1000.0, lat2, lon2, azi2, m12);
 		ss << lat2 << "," << lon2;
 		ss << "|";
 	}
@@ -235,7 +238,7 @@ const char* CampusTask::make_cylinder(double lat, double lon, double radius) {
 
 double CampusTask::calc_inverse(double lat1, double lon1, double lat2, double lon2){
 	Math::real s12, azi1, azi2, m12;
-	Geodesic::WGS84.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
+	geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
 	return s12/1000.0;
 }
 

@@ -23,6 +23,8 @@ using namespace std;
 
 class CampusTask {
 private:
+    Geodesic geod;
+
 	vector<double> track_lat;
 	vector<double> track_lon;
 
