@@ -8,7 +8,7 @@
 #ifndef CAMPUSTASK_H_
 #define CAMPUSTASK_H_
 
-#define MAX_TRACK_PTS 8000
+#define MAX_TRACK_PTS 16000
 #define XY(x,y) ((((unsigned long)(y*(y-1)))>>1) + x) // x,y with x<y!!
 
 
