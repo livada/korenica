@@ -342,3 +342,14 @@ class CampusTask(CampusTaskWrapper):
                 f.write(placemark_end)
             f.write(footer)
         
+    def get_json(self):
+        clist = []
+        for cyl in self.cylinders:
+            pts = self.make_cylinder(*cyl[:3]).split('|')[:-1]
+            plist = []
+            for point in pts:
+                p = point.split(',')
+                plist.append('{lat:%s,lng:%s}' % (p[0], p[1]))
+            clist.append('[' + ','.join(plist) + ']')
+        json_str = '[' + ','.join(clist) + ']'
+        return json_str

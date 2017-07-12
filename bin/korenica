@@ -32,6 +32,7 @@ except ImportError:
 
 from igcutils import IGCReader
 from campus import CampusTask
+from taskpack import pack_methods
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -90,6 +91,28 @@ task_options.add_argument('--task-file', default=argparse.SUPPRESS,
                              help='use specific task file for kml output') 
 task_options.add_argument('--verbose', action='store_true',
                             help='send task to stdout') 
+
+# packing command options
+parser_pack = subparsers.add_parser('pack', 
+                                    help='package tracks and tasks') 
+pack_options = parser_pack.add_argument_group('options')
+pack_options.add_argument('--task-file', default=argparse.SUPPRESS,
+                             help='use specific task file') 
+pack_options.add_argument('--track-suffix', type=str, default='.igc',
+                             metavar='TRACK_SUFFIX',
+                             help='suffix used to match track IGC files')
+pack_options.add_argument('--task-suffix', type=str, default='-task.kml',
+                             metavar='TASK_SUFFIX',
+                             help='suffix used to match task KML files')
+pack_options.add_argument('--task-poly-suffix', type=str, default='-task-poly.kml',
+                             metavar='TASK_POLY_SUFFIX',
+                             help='suffix used to match task polygon KML files')
+pack_options.add_argument('--pack-type', type=str, default='json',
+                             metavar='TYPE',
+                             help='package type (default: JSON)')
+pack_options.add_argument('output_package', type=str, default='task.json',
+                           metavar='PACKAGE_FILE', nargs='?',
+                           help='output package file')
 
 # group standard options 
 other_group = parser.add_argument_group('other options')
@@ -172,3 +195,7 @@ elif args.command=='task':
     if args.verbose or not ('init' in args or 'output_kml' in args):
         print str(task)
 
+
+elif args.command=='pack':
+    if args.pack_type in pack_methods:
+      pack_methods[args.pack_type](task, args)
