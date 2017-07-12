@@ -349,7 +349,7 @@ class CampusTask(CampusTaskWrapper):
             plist = []
             for point in pts:
                 p = point.split(',')
-                plist.append('{lat:%s,lng:%s}' % (p[0], p[1]))
+                plist.append('{"lat":%s,"lng":%s}' % (p[0], p[1]))
             clist.append('[' + ','.join(plist) + ']')
         json_str = '[' + ','.join(clist) + ']'
         return json_str
